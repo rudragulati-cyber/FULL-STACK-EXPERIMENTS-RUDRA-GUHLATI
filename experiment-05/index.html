@@ -3,32 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Experiment 05 - Middleware Implementation</title>
+  <title>Experiment 05 - E-commerce Catalog</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="page">
     <section class="intro">
       <p class="tag">Experiment 05</p>
-      <h1>Middleware Implementation</h1>
-      <p>Logging, authentication, route protection, middleware sequencing, and error handling in Express.</p>
+      <h1>E-commerce Catalog</h1>
+      <p>Create nested product schemas, variants, reviews, aggregation queries, indexes, and stock update methods.</p>
     </section>
-    <section class="controls">
-      <input id="token" placeholder="Enter token: experiment-token">
-      <button id="publicBtn">Public Route</button>
-      <button id="protectedBtn">Protected Route</button>
-      <button id="errorBtn">Trigger Error</button>
+
+    <section class="toolbar">
+      <button id="seedBtn">Seed Product</button>
+      <button id="sellBtn">Sell Black Variant</button>
+      <button id="reviewBtn">Add Review</button>
     </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Product Document</h2>
+        <pre id="productJson"></pre>
+      </article>
+      <article class="panel">
+        <h2>Aggregation Output</h2>
+        <div id="stats" class="stats"></div>
+      </article>
+    </section>
+
     <section class="panel">
-      <h2>Console Output</h2>
-      <div id="logs" class="logs"></div>
-    </section>
-    <section class="panel">
-      <h2>Express Middleware Sequence</h2>
-      <pre><code>app.use(requestLogger);
-app.get("/public", publicController);
-app.get("/protected", authMiddleware, protectedController);
-app.use(errorHandler);</code></pre>
+      <h2>Mongoose Model Highlights</h2>
+      <pre><code>productSchema.index({ category: 1, name: "text" });
+productSchema.methods.updateStock = function (sku, quantity) {
+  const variant = this.variants.find((item) => item.sku === sku);
+  if (!variant || variant.stock + quantity < 0) throw new Error("Invalid stock update");
+  variant.stock += quantity;
+  return this.save();
+};</code></pre>
     </section>
   </main>
   <script src="script.js"></script>

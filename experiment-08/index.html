@@ -3,36 +3,23 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Experiment 08 - Dockerized React App</title>
+  <title>Experiment 08 - Login State Management</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="page">
-    <section class="intro">
+  <main class="login-page">
+    <section class="card">
       <p class="tag">Experiment 08</p>
-      <h1>Dockerize React Application</h1>
-      <p>Multi-stage build, optimized production image, Nginx serving on port 8080, gzip, caching, and environment variables.</p>
-    </section>
-    <section class="grid">
-      <article class="panel"><h2>Build Stage</h2><p>Node 18 installs dependencies and creates optimized static assets.</p></article>
-      <article class="panel"><h2>Runtime Stage</h2><p>Nginx serves the compiled React app with production cache headers.</p></article>
-      <article class="panel"><h2>Expected Output</h2><p>Production-ready Docker image under 100MB served on port 8080.</p></article>
-    </section>
-    <section class="panel">
-      <h2>Dockerfile</h2>
-      <pre><code>FROM node:18-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]</code></pre>
+      <h1>Login Form</h1>
+      <p>React-style state management with controlled inputs, validation, loading, and feedback.</p>
+      <form id="loginForm">
+        <label>Email<input id="email" type="email" placeholder="student@example.com"></label>
+        <label>Password<input id="password" type="password" placeholder="Minimum 6 characters"></label>
+        <button id="submitBtn" type="submit">Login</button>
+      </form>
+      <div id="feedback" class="feedback"></div>
     </section>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>

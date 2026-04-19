@@ -3,24 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Experiment 09 - Blog Platform</title>
+  <title>Experiment 09 - Dockerized React App</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="page">
     <section class="intro">
       <p class="tag">Experiment 09</p>
-      <h1>Blog Platform</h1>
-      <p>Users, profiles, protected posts, comments, and relational data modeling with a full-stack style flow.</p>
+      <h1>Dockerize React Application</h1>
+      <p>Multi-stage build, optimized production image, Nginx serving on port 8080, gzip, caching, and environment variables.</p>
     </section>
-    <section class="composer">
-      <input id="user" placeholder="Profile name">
-      <input id="title" placeholder="Post title">
-      <textarea id="body" placeholder="Write a post"></textarea>
-      <button id="postBtn">Publish Post</button>
+    <section class="grid">
+      <article class="panel"><h2>Build Stage</h2><p>Node 18 installs dependencies and creates optimized static assets.</p></article>
+      <article class="panel"><h2>Runtime Stage</h2><p>Nginx serves the compiled React app with production cache headers.</p></article>
+      <article class="panel"><h2>Expected Output</h2><p>Production-ready Docker image under 100MB served on port 8080.</p></article>
     </section>
-    <section id="posts" class="posts"></section>
+    <section class="panel">
+      <h2>Dockerfile</h2>
+      <pre><code>FROM node:18-alpine AS build
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]</code></pre>
+    </section>
   </main>
-  <script src="script.js"></script>
 </body>
 </html>
