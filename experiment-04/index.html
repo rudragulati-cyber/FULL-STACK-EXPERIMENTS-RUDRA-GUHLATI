@@ -3,21 +3,43 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Experiment 04 - Login State Management</title>
+  <title>Experiment 04 - E-commerce Catalog</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <main class="login-page">
-    <section class="card">
+  <main class="page">
+    <section class="intro">
       <p class="tag">Experiment 04</p>
-      <h1>Login Form</h1>
-      <p>React-style state management with controlled inputs, validation, loading, and feedback.</p>
-      <form id="loginForm">
-        <label>Email<input id="email" type="email" placeholder="student@example.com"></label>
-        <label>Password<input id="password" type="password" placeholder="Minimum 6 characters"></label>
-        <button id="submitBtn" type="submit">Login</button>
-      </form>
-      <div id="feedback" class="feedback"></div>
+      <h1>E-commerce Catalog</h1>
+      <p>Create nested product schemas, variants, reviews, aggregation queries, indexes, and stock update methods.</p>
+    </section>
+
+    <section class="toolbar">
+      <button id="seedBtn">Seed Product</button>
+      <button id="sellBtn">Sell Black Variant</button>
+      <button id="reviewBtn">Add Review</button>
+    </section>
+
+    <section class="grid">
+      <article class="panel">
+        <h2>Product Document</h2>
+        <pre id="productJson"></pre>
+      </article>
+      <article class="panel">
+        <h2>Aggregation Output</h2>
+        <div id="stats" class="stats"></div>
+      </article>
+    </section>
+
+    <section class="panel">
+      <h2>Mongoose Model Highlights</h2>
+      <pre><code>productSchema.index({ category: 1, name: "text" });
+productSchema.methods.updateStock = function (sku, quantity) {
+  const variant = this.variants.find((item) => item.sku === sku);
+  if (!variant || variant.stock + quantity < 0) throw new Error("Invalid stock update");
+  variant.stock += quantity;
+  return this.save();
+};</code></pre>
     </section>
   </main>
   <script src="script.js"></script>

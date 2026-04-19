@@ -3,36 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Experiment 05 - Dockerized React App</title>
+  <title>Experiment 05 - Middleware Implementation</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <main class="page">
     <section class="intro">
       <p class="tag">Experiment 05</p>
-      <h1>Dockerize React Application</h1>
-      <p>Multi-stage build, optimized production image, Nginx serving on port 8080, gzip, caching, and environment variables.</p>
+      <h1>Middleware Implementation</h1>
+      <p>Logging, authentication, route protection, middleware sequencing, and error handling in Express.</p>
     </section>
-    <section class="grid">
-      <article class="panel"><h2>Build Stage</h2><p>Node 18 installs dependencies and creates optimized static assets.</p></article>
-      <article class="panel"><h2>Runtime Stage</h2><p>Nginx serves the compiled React app with production cache headers.</p></article>
-      <article class="panel"><h2>Expected Output</h2><p>Production-ready Docker image under 100MB served on port 8080.</p></article>
+    <section class="controls">
+      <input id="token" placeholder="Enter token: experiment-token">
+      <button id="publicBtn">Public Route</button>
+      <button id="protectedBtn">Protected Route</button>
+      <button id="errorBtn">Trigger Error</button>
     </section>
     <section class="panel">
-      <h2>Dockerfile</h2>
-      <pre><code>FROM node:18-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build
-
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-EXPOSE 8080
-CMD ["nginx", "-g", "daemon off;"]</code></pre>
+      <h2>Console Output</h2>
+      <div id="logs" class="logs"></div>
+    </section>
+    <section class="panel">
+      <h2>Express Middleware Sequence</h2>
+      <pre><code>app.use(requestLogger);
+app.get("/public", publicController);
+app.get("/protected", authMiddleware, protectedController);
+app.use(errorHandler);</code></pre>
     </section>
   </main>
+  <script src="script.js"></script>
 </body>
 </html>

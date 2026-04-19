@@ -1,0 +1,10 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Arial, sans-serif; background: #f7f9fb; color: #17202a; }
+.page { width: min(1100px, calc(100% - 32px)); margin: 0 auto; padding: 34px 0; }
+.intro { padding: 28px; border-radius: 8px; color: white; background: #17324d; }
+.tag { color: #f4c542; font-weight: 700; margin: 0 0 8px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 22px 0; }
+.panel { padding: 22px; border: 1px solid #dce5ec; border-radius: 8px; background: white; box-shadow: 0 14px 34px rgba(23,32,42,.08); }
+h1, h2 { margin: 0 0 12px; }
+pre { overflow: auto; padding: 16px; border-radius: 8px; background: #10212f; color: white; }
+@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }

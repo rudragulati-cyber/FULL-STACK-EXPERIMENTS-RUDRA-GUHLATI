@@ -1,61 +1,44 @@
-const postsEl = document.getElementById("posts");
-const userEl = document.getElementById("user");
-const titleEl = document.getElementById("title");
-const bodyEl = document.getElementById("body");
-const key = "blog-platform-experiment";
+const products = document.getElementById("products");
+const spinner = document.getElementById("spinner");
+const alertBox = document.getElementById("alert");
 
-function readPosts() {
-  return JSON.parse(localStorage.getItem(key) || "[]");
-}
+const api = {
+  getProducts() {
+    return new Promise((resolve) => {
+      setTimeout(() => resolve({
+        data: [
+          { id: 1, name: "Premium Headphones", category: "Electronics", price: 199.99 },
+          { id: 2, name: "Smart Watch", category: "Wearables", price: 149.99 },
+          { id: 3, name: "USB-C Dock", category: "Accessories", price: 89.99 }
+        ]
+      }), 800);
+    });
+  }
+};
 
-function writePosts(posts) {
-  localStorage.setItem(key, JSON.stringify(posts));
-}
-
-function render() {
-  const posts = readPosts();
-  postsEl.innerHTML = posts.map((post) => `
-    <article class="post">
-      <h2>${post.title}</h2>
-      <p class="meta">By ${post.user} - protected route simulation</p>
-      <p>${post.body}</p>
-      <div class="comments">
-        <strong>${post.comments.length} comments</strong>
-        ${post.comments.map((comment) => `<div class="comment">${comment}</div>`).join("")}
-        <div class="composer">
-          <input placeholder="Add real-time comment" data-comment="${post.id}">
-          <button data-add="${post.id}">Add Comment</button>
-        </div>
+async function fetchProducts(shouldFail = false) {
+  products.innerHTML = "";
+  alertBox.innerHTML = "";
+  spinner.classList.remove("d-none");
+  try {
+    if (shouldFail) throw new Error("Failed to fetch products from Express API.");
+    const response = await api.getProducts();
+    products.innerHTML = response.data.map((product) => `
+      <div class="col-md-4">
+        <article class="card product-card p-3">
+          <h2 class="h5">${product.name}</h2>
+          <p class="text-muted">${product.category}</p>
+          <p class="price">$${product.price}</p>
+        </article>
       </div>
-    </article>
-  `).join("") || '<article class="post"><h2>No posts yet</h2><p>Create a profile and publish the first post.</p></article>';
+    `).join("");
+  } catch (error) {
+    alertBox.innerHTML = `<div class="alert alert-danger">${error.message}</div>`;
+  } finally {
+    spinner.classList.add("d-none");
+  }
 }
 
-document.getElementById("postBtn").addEventListener("click", () => {
-  if (!userEl.value.trim() || !titleEl.value.trim() || !bodyEl.value.trim()) return;
-  const posts = readPosts();
-  posts.unshift({
-    id: crypto.randomUUID(),
-    user: userEl.value.trim(),
-    title: titleEl.value.trim(),
-    body: bodyEl.value.trim(),
-    comments: []
-  });
-  writePosts(posts);
-  titleEl.value = "";
-  bodyEl.value = "";
-  render();
-});
-
-postsEl.addEventListener("click", (event) => {
-  const button = event.target.closest("[data-add]");
-  if (!button) return;
-  const input = postsEl.querySelector(`[data-comment="${button.dataset.add}"]`);
-  const posts = readPosts();
-  const post = posts.find((item) => item.id === button.dataset.add);
-  if (post && input.value.trim()) post.comments.push(input.value.trim());
-  writePosts(posts);
-  render();
-});
-
-render();
+document.getElementById("loadBtn").addEventListener("click", () => fetchProducts(false));
+document.getElementById("errorBtn").addEventListener("click", () => fetchProducts(true));
+fetchProducts(false);
